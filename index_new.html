@@ -8,6 +8,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <!-- Firebase SDK -->
+<script>
+window._DB = { users:[], orcamentos:[], servicos:[], ready:false };
+window._saveUsers      = function(u){ console.warn('Firebase carregando...'); return Promise.resolve(); };
+window._saveOrcamentos = function(o){ console.warn('Firebase carregando...'); return Promise.resolve(); };
+window._saveServicos   = function(s){ console.warn('Firebase carregando...'); return Promise.resolve(); };
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -23,8 +29,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-window._DB = { users:[], orcamentos:[], servicos:[], ready:false };
 
 const USERS_DEFAULT = [
   {id:'u1', nome:'Dayane Gomes', email:'dgomes@confiancemedical.com.br', senha:'confiance@2024', perfil:'supervisor', ativo:true, primeiroAcesso:false},
@@ -1175,9 +1179,9 @@ document.addEventListener('click', ()=>{
 // ============================================================
 function viewOrcamento(id) {
   currentViewOrcId = id;
-  const orcs = getOrcamentos();
+  const orcs = (window._DB?.orcamentos || getOrcamentos());
   const o = orcs.find(x=>x.id===id);
-  if(!o) return;
+  if(!o) { alert('Orçamento não encontrado. Recarregue a página.'); return; }
   const fil = FILIAIS[o.filial]||FILIAIS.RJ;
   const pgLabel = {avista:'À Vista', '30dias':'30 dias', parcelado:`Parcelado (${o.parcelas}x)`};
   let itensHtml = (o.itens||[]).map(it=>`
@@ -1269,9 +1273,12 @@ function renderAprovacoes() {
 }
 
 function openAprovar(id) {
+  const orcs = (window._DB?.orcamentos || getOrcamentos());
+  const orc = orcs.find(o=>o.id===id);
+  if(!orc) { alert('Orçamento não encontrado. Recarregue a página.'); return; }
   document.getElementById('aprovOrcId').value = id;
   document.getElementById('aprovObs').value = '';
-  document.getElementById('modalAprovarTitle').textContent = 'Aprovação — '+getOrcamentos().find(o=>o.id===id)?.numero;
+  document.getElementById('modalAprovarTitle').textContent = 'Aprovação — '+(orc.numero||id);
   document.getElementById('modalAprovar').classList.remove('d-none');
 }
 
