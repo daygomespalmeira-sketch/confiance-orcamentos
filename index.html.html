@@ -80,6 +80,7 @@ window._saveServicos = async function(sv){ const b=writeBatch(db); sv.forEach(s=
     startListeners();
     await new Promise(r=>setTimeout(r,1200));
     window._DB.ready = true;
+    window._diagLog && window._diagLog('Firebase PRONTO! users='+window._DB.users.length+' orcs='+window._DB.orcamentos.length, 'ok');
     if(overlay.parentNode) overlay.parentNode.removeChild(overlay);
     loginChildren.forEach(el=>el.style.display='');
   } catch(e) {
@@ -234,6 +235,40 @@ tr:hover td{background:#F8FAFC}
 </style>
 </head>
 <body>
+
+<style id="diag-style">
+#diagPanel {
+  position:fixed; top:0; left:0; right:0; z-index:99999;
+  background:#1F2C4E; color:#64C3D1; font-family:monospace; font-size:11px;
+  padding:6px 12px; max-height:120px; overflow-y:auto;
+  border-bottom:2px solid #FFA300;
+}
+#diagPanel .ok  { color:#4ade80; }
+#diagPanel .err { color:#f87171; }
+#diagPanel .warn { color:#FFA300; }
+</style>
+
+<div id="diagPanel">
+  <span style="color:#FFA300;font-weight:bold">🔍 DIAGNÓSTICO: </span>
+  <span id="diagMsg">Aguardando...</span>
+</div>
+
+<script>
+function diagLog(msg, type) {
+  var p = document.getElementById('diagPanel');
+  var m = document.getElementById('diagMsg');
+  if(!p) return;
+  var span = document.createElement('span');
+  span.className = type||'';
+  span.textContent = ' | ' + msg;
+  p.appendChild(span);
+  p.scrollTop = p.scrollHeight;
+}
+window._diagLog = diagLog;
+diagLog('JS carregado', 'ok');
+diagLog('_DB=' + (window._DB ? 'OK' : 'AUSENTE'), window._DB ? 'ok' : 'err');
+</script>
+
 
 <!-- LOGIN PAGE -->
 <div id="loginPage">
@@ -671,6 +706,9 @@ let currentViewOrcId = null;
 // LOGIN
 // ============================================================
 function doLogin() {
+  window._diagLog && window._diagLog('doLogin chamado', 'ok');
+  window._diagLog && window._diagLog('_DB.ready=' + window._DB?.ready, window._DB?.ready ? 'ok' : 'warn');
+  window._diagLog && window._diagLog('users=' + (window._DB?.users?.length||0), 'ok');
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   const users = getUsers();
