@@ -280,21 +280,29 @@ tr:hover td{background:#F8FAFC}
     <div class="header-logo">
       <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMjAgMTAwIiB3aWR0aD0iMzIwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjkpIiBzdHJva2Utd2lkdGg9IjE0Ii8+CiAgPHBhdGggZD0iTSA1MCAxMCBBIDQwIDQwIDAgMCAxIDkwIDUwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2NEMzRDEiIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDx0ZXh0IHg9IjEwNSIgeT0iNDgiIGZvbnQtZmFtaWx5PSJNb250c2VycmF0LCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjgwMCIgZm9udC1zaXplPSIyOCIgZmlsbD0iI0ZGRkZGRiIgbGV0dGVyLXNwYWNpbmc9IjEiPkNPTkZJQU5DRTwvdGV4dD4KICA8dGV4dCB4PSIxMDgiIHk9Ijc0IiBmb250LWZhbWlseT0iTW9udHNlcnJhdCwgQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZvbnQtc2l6ZT0iMjIiIGZpbGw9IiM2NEMzRDEiIGxldHRlci1zcGFjaW5nPSIzIj5NRURJQ0FMPC90ZXh0Pgo8L3N2Zz4=" alt="Confiance Medical" style="height:50px" />
     </div>
+    <div class="header-title" style="color:#fff;text-align:center;flex:1;padding:0 16px">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.3px;line-height:1.2">Orçamento de Manutenção Preventiva</div>
+      <div style="font-family:'Raleway',sans-serif;font-size:.78rem;opacity:.85">Visita Técnica</div>
+    </div>
     <div class="header-user">
       <div>
         <div class="user-name" id="headerUserName"></div>
         <div class="user-role" id="headerUserRole"></div>
       </div>
+      <span id="onlineIndicator" style="display:inline-flex;align-items:center;gap:5px;font-size:.75rem;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.15);margin-right:8px">
+        <span id="onlineDot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;transition:background .3s"></span>
+        <span id="onlineText" style="color:#fff">Online</span>
+      </span>
       <button class="btn-logout" onclick="doLogout()">Sair</button>
     </div>
   </header>
   <nav class="app-nav" id="appNav">
-    <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard',this)">Dashboard</div>
-    <div class="nav-item" data-section="orcamentos" onclick="showSection('orcamentos',this)">Orçamentos</div>
-    <div class="nav-item d-none" data-section="aprovacoes" id="navAprovacoes" onclick="showSection('aprovacoes',this)">Aprovações</div>
-    <div class="nav-item" data-section="faturamento" onclick="showSection('faturamento',this)">Faturamento</div>
-    <div class="nav-item d-none" data-section="colaboradores" id="navColaboradores" onclick="showSection('colaboradores',this)">Colaboradores</div>
-    <div class="nav-item d-none" data-section="servicos" id="navServicos" onclick="showSection('servicos',this)">Serviços</div>
+    <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard',this)">🏠 Dashboard</div>
+    <div class="nav-item" data-section="orcamentos" onclick="showSection('orcamentos',this)">📋 Orçamentos</div>
+    <div class="nav-item d-none" data-section="aprovacoes" id="navAprovacoes" onclick="showSection('aprovacoes',this)">✅ Aprovações</div>
+    
+    <div class="nav-item d-none" data-section="colaboradores" id="navColaboradores" onclick="showSection('colaboradores',this)">👥 Colaboradores</div>
+    <div class="nav-item d-none" data-section="servicos" id="navServicos" onclick="showSection('servicos',this)">🔧 Serviços</div>
   </nav>
   <main class="app-content">
 
@@ -341,7 +349,13 @@ tr:hover td{background:#F8FAFC}
 
     <!-- FATURAMENTO -->
     <div class="section" id="sec-faturamento">
-      <div class="card-title" style="font-size:1.3rem;margin-bottom:16px">Faturamento</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div class="card-title" style="font-size:1.3rem;margin:0">💰 Aprovados</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="exportRelatorioPDF()">📄 Exportar PDF</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportRelatorioExcel()">📊 Exportar Excel</button>
+        </div>
+      </div>
       <div class="card">
         <div class="tab-nav">
           <button class="tab-btn active" onclick="showFatTab('mensal',this)">Mensal</button>
@@ -549,6 +563,13 @@ tr:hover td{background:#F8FAFC}
     </div>
 
     <div class="form-group">
+      <label>Descrição do Serviço</label>
+      <div style="background:#F0F9FF;border:1.5px solid #64C3D1;border-radius:8px;padding:12px;font-size:.88rem;color:#1F2C4E;line-height:1.6">
+        Será realizada a manutenção preventiva dos equipamentos listados acima, assim como ajustes técnicos internos necessários e a emissão do laudo de conformidade dos equipamentos.<br><br>
+        <strong>Após a aprovação será agendado em um período de até 30 dias a visita para a manutenção preventiva.</strong>
+      </div>
+    </div>
+    <div class="form-group">
       <label>Observações</label>
       <textarea id="orcObs" rows="3" placeholder="Observações adicionais..."></textarea>
     </div>
@@ -752,25 +773,58 @@ function showSection(name, el) {
 // DASHBOARD
 // ============================================================
 function renderDashboard() {
-  const orcs = getOrcamentos();
-  const total = orcs.length;
-  const aguardando = orcs.filter(o=>o.status==='aguardando').length;
-  const aprovados = orcs.filter(o=>o.status==='aprovado'||o.status==='enviado').length;
-  const totalVal = orcs.filter(o=>o.status==='aprovado'||o.status==='enviado').reduce((a,o)=>a+o.total,0);
-  const grid = document.getElementById('statsGrid');
-  grid.innerHTML = `
-    <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total de Orçamentos</div></div>
-    <div class="stat-card orange"><div class="stat-value">${aguardando}</div><div class="stat-label">Aguardando Aprovação</div></div>
-    <div class="stat-card green"><div class="stat-value">${aprovados}</div><div class="stat-label">Aprovados / Enviados</div></div>
-    <div class="stat-card blue"><div class="stat-value">${fmtMoney(totalVal)}</div><div class="stat-label">Faturamento (Aprovados)</div></div>
-  `;
-  const recent = [...orcs].sort((a,b)=>b.createdAt-a.createdAt).slice(0,8);
-  document.getElementById('dashRecentTable').innerHTML = buildOrcTable(recent, false);
+  var orcs = window._DB?.orcamentos || [];
+  var total = orcs.length;
+  var totalVal = orcs.reduce(function(a,o){ return a+(o.total||0); }, 0);
+
+  var grid = document.getElementById('statsGrid');
+  if(grid) grid.innerHTML =
+    '<div class="stat-card" style="background:linear-gradient(135deg,#1F2C4E,#326A84);color:#fff;cursor:default">' +
+      '<div class="stat-value" style="font-size:2.2rem">'+total+'</div>' +
+      '<div class="stat-label" style="color:rgba(255,255,255,.85)">Orçamentos Gerados</div>' +
+    '</div>' +
+    '<div class="stat-card" style="background:linear-gradient(135deg,#64C3D1,#326A84);color:#fff;cursor:default">' +
+      '<div class="stat-value" style="font-size:1.5rem">'+fmtMoney(totalVal)+'</div>' +
+      '<div class="stat-label" style="color:rgba(255,255,255,.85)">Valor Total em Orçamentos</div>' +
+    '</div>';
+
+  // Gráfico por UF
+  var statePairs = {};
+  orcs.forEach(function(o){ var uf=o.uf||'N/D'; statePairs[uf]=(statePairs[uf]||0)+1; });
+  var ranking = Object.entries(statePairs).sort(function(a,b){return b[1]-a[1];}).slice(0,12);
+  var stateColors = ['#1F2C4E','#326A84','#64C3D1','#FFA300','#38A169','#D97706','#E53E3E','#805AD5','#00A651','#003B8E','#c0392b','#16a085'];
+  var rankHtml = '';
+  if(ranking.length) {
+    var maxVal = ranking[0][1];
+    rankHtml = '<div class="card" style="margin-top:20px;padding:24px">' +
+      '<div style="font-size:1rem;font-weight:700;color:#1F2C4E;margin-bottom:18px">📊 Orçamentos por Estado (UF)</div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px">';
+    ranking.forEach(function(entry, i) {
+      var uf=entry[0], qtd=entry[1];
+      var pct=Math.round(qtd/maxVal*100);
+      rankHtml +=
+        '<div style="display:flex;align-items:center;gap:12px">' +
+          '<span style="font-weight:700;font-size:.9rem;color:#1F2C4E;min-width:34px">'+uf+'</span>' +
+          '<div style="flex:1;background:#F0F4F8;border-radius:8px;overflow:hidden;height:26px">' +
+            '<div style="width:'+pct+'%;background:'+stateColors[i%stateColors.length]+';height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;transition:width .5s">' +
+              '<span style="color:#fff;font-size:.8rem;font-weight:700">'+qtd+'</span>' +
+            '</div>' +
+          '</div>' +
+          '<span style="font-size:.82rem;color:#706F6F;min-width:55px;text-align:right">'+qtd+' orc.</span>' +
+        '</div>';
+    });
+    rankHtml += '</div></div>';
+  } else {
+    rankHtml = '<div class="card" style="margin-top:20px;padding:24px;text-align:center;color:#706F6F">Nenhum orçamento criado ainda.</div>';
+  }
+  var dashRanking = document.getElementById('dashRanking');
+  if(dashRanking) dashRanking.innerHTML = rankHtml;
+
+  var recent = orcs.slice().sort(function(a,b){return b.createdAt-a.createdAt;}).slice(0,8);
+  var dashRecent = document.getElementById('dashRecentTable');
+  if(dashRecent) dashRecent.innerHTML = buildOrcTable(recent, false);
 }
 
-// ============================================================
-// ORÇAMENTOS
-// ============================================================
 function renderOrcamentos() {
   let orcs = getOrcamentos();
   const q = (document.getElementById('searchOrc').value||'').toLowerCase();
@@ -1293,170 +1347,195 @@ function deleteServico(id) {
 function exportPDF() {
   const orcs = getOrcamentos();
   const o = orcs.find(x=>x.id===currentViewOrcId);
-  if(!o) return;
+  if(!o) { alert('Nenhum orçamento selecionado.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   const fil = FILIAIS[o.filial]||FILIAIS.RJ;
   const W = 210; const margin = 15;
-  
-  // Header gradient background
+
+  // ── HEADER ──
   doc.setFillColor(31,44,78);
-  doc.rect(0,0,W,38,'F');
-  
-  // Company name
-  doc.setTextColor(255,255,255);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(18);
-  doc.text('CONFIANCE MEDICAL', margin, 16);
+  doc.rect(0,0,W,44,'F');
+  // Título centralizado
   doc.setTextColor(100,195,209);
+  doc.setFont('helvetica','bold');
   doc.setFontSize(11);
-  doc.text('MEDICAL', margin+0.5, 24);
+  doc.text('ORÇAMENTO DE MANUTENÇÃO PREVENTIVA / VISITA TÉCNICA', W/2, 10, {align:'center'});
+  // Linha separadora
+  doc.setDrawColor(100,195,209); doc.setLineWidth(0.4);
+  doc.line(margin, 13, W-margin, 13);
+
+  // Logo via canvas (SVG → PNG → jsPDF)
+  var logoAdded = false;
+  try {
+    var logoSrc = window.LOGO_WHITE_SRC || (typeof LOGO_WHITE !== 'undefined' ? LOGO_WHITE : null);
+    if(!logoSrc && typeof LOGO_COLOR !== 'undefined') logoSrc = LOGO_COLOR;
+    if(logoSrc) {
+      var img = new Image();
+      img.src = logoSrc;
+      var cnv = document.createElement('canvas');
+      cnv.width = 320; cnv.height = 100;
+      var ctx = cnv.getContext('2d');
+      // Fundo azul igual ao header
+      ctx.fillStyle = '#1F2C4E';
+      ctx.fillRect(0,0,320,100);
+      ctx.drawImage(img, 0, 0, 320, 100);
+      var pngData = cnv.toDataURL('image/png');
+      doc.addImage(pngData, 'PNG', margin, 15, 52, 16);
+      logoAdded = true;
+    }
+  } catch(e) { console.warn('Logo PNG falhou:', e); }
+
+  if(!logoAdded) {
+    // fallback texto
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(14);
+    doc.text('CONFIANCE', margin, 23);
+    doc.setTextColor(100,195,209);
+    doc.setFontSize(9);
+    doc.text('MEDICAL', margin+0.5, 30);
+  }
+
   doc.setTextColor(255,255,255);
-  doc.setFontSize(8);
-  doc.text('at@confiancemedical.com.br', margin, 32);
-  
-  // ORC number
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica','normal');
+  doc.text('at@confiancemedical.com.br', margin, 37);
+
+  // Número e datas à direita
   doc.setFont('helvetica','bold');
-  doc.setFontSize(14);
-  doc.setTextColor(255,255,255);
-  doc.text(o.numero, W-margin, 16, {align:'right'});
-  doc.setFontSize(8);
+  doc.setFontSize(13);
+  doc.text(o.numero||'', W-margin, 22, {align:'right'});
+  doc.setFontSize(7.5);
   doc.setTextColor(200,220,225);
-  doc.text('Data: ' + (o.data||fmtDate(o.createdAt)), W-margin, 24, {align:'right'});
-  const venc = new Date(o.createdAt + (o.validade||28)*86400000);
-  doc.text('Validade: ' + fmtDate(venc.getTime()), W-margin, 30, {align:'right'});
-  
-  let y = 46;
-  
-  // Emitente / Cliente boxes
+  doc.setFont('helvetica','normal');
+  doc.text('Data: '+(o.data||fmtDate(o.createdAt)), W-margin, 30, {align:'right'});
+  const venc = new Date((o.createdAt||Date.now())+(o.validade||28)*86400000);
+  doc.text('Válido até: '+fmtDate(venc.getTime()), W-margin, 37, {align:'right'});
+
+  let y = 52;
+
+  // ── EMITENTE / CLIENTE ──
+  var colW = (W-2*margin-6)/2;
+  var cx = margin+colW+6;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  var cnameLines = doc.splitTextToSize(o.cliente||'—', colW-6);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  var endStr = '';
+  if(o.endereco) endStr += o.endereco;
+  if(o.numEnd)   endStr += ', '+o.numEnd;
+  if(o.compl)    endStr += ' ('+o.compl+')';
+  var cidStr = '';
+  if(o.bairro) cidStr += o.bairro;
+  if(o.cidade) cidStr += (cidStr?' — ':'')+o.cidade;
+  if(o.uf)     cidStr += '/'+o.uf;
+  if(o.cep)    cidStr += '  CEP: '+o.cep;
+  var endLines = endStr ? doc.splitTextToSize(endStr, colW-6) : [];
+  var cidLines = cidStr ? doc.splitTextToSize(cidStr, colW-6) : [];
+  var boxH = Math.max(32, 14+cnameLines.length*5+5+endLines.length*4.5+cidLines.length*4.5);
+
   doc.setFillColor(245,247,250);
-  doc.roundedRect(margin, y, (W-2*margin-6)/2, 26, 2, 2, 'F');
-  doc.roundedRect(margin+(W-2*margin-6)/2+6, y, (W-2*margin-6)/2, 26, 2, 2, 'F');
-  
-  doc.setTextColor(100,120,140);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(7);
+  doc.roundedRect(margin, y, colW, boxH, 2, 2, 'F');
+  doc.roundedRect(cx, y, colW, boxH, 2, 2, 'F');
+  doc.setTextColor(100,120,140); doc.setFont('helvetica','bold'); doc.setFontSize(7);
   doc.text('EMITENTE', margin+3, y+6);
-  doc.text('CLIENTE', margin+(W-2*margin-6)/2+9, y+6);
-  
-  doc.setTextColor(31,44,78);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(9);
-  doc.text('Confiance Medical', margin+3, y+12);
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(8);
-  doc.text('CNPJ: ' + fil.cnpj, margin+3, y+18);
-  doc.text(fil.nome, margin+3, y+23);
-  
-  const cx = margin+(W-2*margin-6)/2+9;
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(9);
-  doc.setTextColor(31,44,78);
-  const cname = (o.cliente||'').substring(0,30);
-  doc.text(cname, cx, y+12);
-  doc.setFont('helvetica','normal');
-  doc.setFontSize(8);
-  doc.text('CNPJ: ' + (o.cnpj||'—'), cx, y+18);
-  const addr = ((o.endereco||'')+(o.numEnd?', '+o.numEnd:'')+(o.cidade?' — '+o.cidade:'')).substring(0,36);
-  doc.text(addr, cx, y+23);
-  
-  y += 34;
-  
-  // Equipamentos
+  doc.text('CLIENTE', cx+3, y+6);
+  doc.setTextColor(31,44,78); doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  doc.text('Confiance Medical', margin+3, y+13);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  doc.text('CNPJ: '+fil.cnpj, margin+3, y+19);
+  doc.text(fil.nome, margin+3, y+25);
+  var cy = y+13;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  cnameLines.forEach(function(ln){ doc.text(ln, cx+3, cy); cy+=5; });
+  doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  doc.text('CNPJ: '+(o.cnpj||'—'), cx+3, cy); cy+=5;
+  endLines.forEach(function(ln){ doc.text(ln, cx+3, cy); cy+=4.5; });
+  cidLines.forEach(function(ln){ doc.text(ln, cx+3, cy); cy+=4.5; });
+  y += boxH+6;
+
+  // ── EQUIPAMENTOS ──
   if(o.equipamentos) {
     doc.setFillColor(235,248,255);
-    doc.roundedRect(margin, y, W-2*margin, 12, 2, 2, 'F');
-    doc.setTextColor(50,106,132);
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(7.5);
-    doc.text('Equipamentos: ', margin+3, y+5);
-    doc.setFont('helvetica','normal');
-    const eq = o.equipamentos.substring(0,80);
-    doc.text(eq, margin+32, y+5);
-    y += 18;
+    var eqLines = doc.splitTextToSize('Equipamentos: '+o.equipamentos, W-2*margin-6);
+    var eqH = 8+eqLines.length*5;
+    doc.roundedRect(margin, y, W-2*margin, eqH, 2, 2, 'F');
+    doc.setTextColor(50,106,132); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    var ey = y+6;
+    eqLines.forEach(function(ln){ doc.text(ln, margin+3, ey); ey+=5; });
+    y += eqH+4;
   }
-  
-  // Items table
-  const tableData = (o.itens||[]).map(it=>([
-    it.desc||'',
-    String(it.qtd||1),
-    'R$ '+parseFloat(it.valor||0).toFixed(2).replace('.',','),
-    'R$ '+((it.qtd||1)*(it.valor||0)).toFixed(2).replace('.',',')
-  ]));
-  tableData.push(['','','Subtotal', 'R$ '+o.subtotal.toFixed(2).replace('.',',')]);
-  tableData.push(['','','Imposto (16%)', 'R$ '+o.imposto.toFixed(2).replace('.',',')]);
-  tableData.push(['','','TOTAL', 'R$ '+o.total.toFixed(2).replace('.',',')]);
-  
-  doc.autoTable({
-    startY: y,
-    head: [['Descrição','Qtd','Valor Unit.','Subtotal']],
-    body: tableData,
-    margin: {left:margin, right:margin},
-    headStyles: {fillColor:[31,44,78],textColor:[255,255,255],fontStyle:'bold',fontSize:8},
-    bodyStyles: {fontSize:8},
-    alternateRowStyles: {fillColor:[248,250,252]},
-    didDrawCell: (data) => {
-      if(data.section==='body' && data.row.index >= tableData.length-3) {
-        const isTotal = data.row.index === tableData.length-1;
-        if(isTotal) {
-          data.cell.styles.fillColor = [235,248,255];
-          data.cell.styles.fontStyle = 'bold';
-          data.cell.styles.textColor = [31,44,78];
-        }
-      }
-    }
-  });
-  
-  y = doc.lastAutoTable.finalY + 8;
-  
-  // Extenso
-  doc.setFontSize(8.5);
-  doc.setTextColor(50,106,132);
-  doc.setFont('helvetica','italic');
-  doc.text(valorPorExtenso(o.total), margin, y);
-  y += 10;
-  
-  // Pagamento
-  const pgLabel = {avista:'À Vista', '30dias':'30 dias', parcelado:`Parcelado (${o.parcelas}x)`};
-  doc.setFont('helvetica','normal');
-  doc.setTextColor(80,80,80);
-  doc.setFontSize(8);
-  doc.text('Condições de Pagamento: ' + (pgLabel[o.pagamento]||o.pagamento), margin, y);
-  y += 6;
-  
-  // Clausula
-  doc.setFillColor(235,248,255);
-  doc.roundedRect(margin, y, W-2*margin, 16, 2, 2, 'F');
-  doc.setTextColor(50,106,132);
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(7);
-  doc.text('DISPONIBILIDADE:', margin+3, y+5);
-  doc.setFont('helvetica','normal');
-  const clausula = 'O valor de R$ 360,00 corresponde ao set de vídeo. Em caso de reagendamento com menos de 48h de antecedência,';
-  const clausula2 = 'será cobrada a taxa de disponibilidade correspondente ao período solicitado.';
-  doc.text(clausula, margin+3, y+10);
-  doc.text(clausula2, margin+3, y+14);
-  y += 22;
-  
-  if(o.obs) {
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(80,80,80);
-    doc.text('Observações: ', margin, y);
-    doc.setFont('helvetica','normal');
-    doc.text(o.obs.substring(0,100), margin+28, y);
-    y += 8;
-  }
-  
-  // Footer
-  const pageH = doc.internal.pageSize.height;
+
+  // Tabela de itens removida — exibe só valor total
+
+  // ── VALOR TOTAL ──
   doc.setFillColor(31,44,78);
-  doc.rect(0, pageH-14, W, 14, 'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(7);
-  doc.setFont('helvetica','normal');
+  doc.roundedRect(margin, y, W-2*margin, 12, 2, 2, 'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text('VALOR TOTAL:', margin+4, y+8);
+  doc.text('R$ '+parseFloat(o.total||0).toFixed(2).replace('.',','), W-margin-4, y+8, {align:'right'});
+  y += 16;
+
+  // Extenso
+  doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor(50,106,132);
+  doc.text(valorPorExtenso(o.total||0), margin, y);
+  y += 8;
+
+  // ── DESCRIÇÃO DO SERVIÇO ──
+  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(31,44,78);
+  doc.text('Descrição do Serviço:', margin, y); y+=6;
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(60,60,60);
+  var descText = 'Será realizada a manutenção preventiva dos equipamentos listados acima, assim como ajustes técnicos internos necessários e a emissão do laudo de conformidade dos equipamentos.';
+  var descLines = doc.splitTextToSize(descText, W-2*margin);
+  descLines.forEach(function(ln){ doc.text(ln, margin, y); y+=5; });
+  y+=2;
+  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(31,44,78);
+  var desc2 = 'Após a aprovação será agendado em um período de até 30 dias a visita para a manutenção preventiva.';
+  var desc2Lines = doc.splitTextToSize(desc2, W-2*margin);
+  desc2Lines.forEach(function(ln){ doc.text(ln, margin, y); y+=5; });
+  y += 4;
+
+  // ── PAGAMENTO ──
+  var pgLabel = {avista:'À Vista', '30dias':'30 dias', parcelado:'Parcelado ('+o.parcelas+'x)'};
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(80,80,80);
+  doc.text('Condições de Pagamento: '+(pgLabel[o.pagamento]||o.pagamento||'—'), margin, y);
+  y += 8;
+
+  // Disponibilidade removida a pedido
+
+  if(o.obs) {
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(80,80,80);
+    doc.text('Observações:', margin, y);
+    doc.setFont('helvetica','normal');
+    var obsLines = doc.splitTextToSize(o.obs, W-2*margin-30);
+    obsLines.forEach(function(ln){ doc.text(ln, margin+30, y); y+=5; });
+    y += 4;
+  }
+
+  // ── ACEITE DO CLIENTE ──
+  y += 6;
+  doc.setDrawColor(180,180,180); doc.setLineWidth(0.3);
+  doc.line(margin, y, margin+70, y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(100,100,100);
+  doc.text('Assinatura / Aceite do Cliente', margin, y+5);
+  doc.line(W-margin-70, y, W-margin, y);
+  doc.text('Data de Aceite', W-margin-70, y+5);
+  y += 16;
+  doc.setFillColor(240,248,255);
+  doc.roundedRect(margin, y, W-2*margin, 10, 2, 2, 'F');
+  doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(50,106,132);
+  doc.text('Ao assinar este documento, o cliente declara estar de acordo com os termos e valores apresentados neste orçamento.', W/2, y+6.5, {align:'center'});
+  y += 16;
+
+  // ── RODAPÉ ──
+  var pageH = doc.internal.pageSize.height;
+  doc.setFillColor(31,44,78);
+  doc.rect(0,pageH-14,W,14,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','normal'); doc.setFontSize(7);
   doc.text('Confiance Medical — at@confiancemedical.com.br — #PorUmMundoSemCicatriz', W/2, pageH-6, {align:'center'});
-  
+
+  // ── DOWNLOAD ──
   var pdfBlob = doc.output('blob');
   var pdfUrl = URL.createObjectURL(pdfBlob);
   var pdfLink = document.createElement('a');
@@ -1532,6 +1611,54 @@ function numExtenso(n) {
   else if(n>0) r+=un[n];
   return r;
 }
+
+// Expor funções globalmente para contornar CSP do Vercel
+window.doLogin = doLogin;
+
+// Online/offline indicator
+function updateOnlineStatus() {
+  var dot = document.getElementById('onlineDot');
+  var txt = document.getElementById('onlineText');
+  if(!dot) return;
+  if(navigator.onLine) { dot.style.background='#4ade80'; txt.textContent='Online'; }
+  else { dot.style.background='#f87171'; txt.textContent='Offline'; }
+}
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+window.doLogout = doLogout;
+window.enterApp = enterApp;
+window.showSection = showSection;
+window.openNewOrcamento = openNewOrcamento;
+window.saveOrcamento = saveOrcamento;
+window.editOrcamento = editOrcamento;
+window.deleteOrcamento = deleteOrcamento;
+window.viewOrcamento = viewOrcamento;
+window.exportPDF = exportPDF;
+window.sendWhatsApp = sendWhatsApp;
+window.markEnviado = markEnviado;
+window.openAprovar = openAprovar;
+window.resolveAprovacao = resolveAprovacao;
+window.closeModal = closeModal;
+window.addItemFromService = addItemFromService;
+window.addItemLivre = addItemLivre;
+window.removeItem = removeItem;
+window.calcTotals = calcTotals;
+window.toggleParcelas = toggleParcelas;
+window.autocompleteCliente = autocompleteCliente;
+window.selectCliente = selectCliente;
+window.openAddColab = openAddColab;
+window.saveColab = saveColab;
+window.toggleColab = toggleColab;
+window.resetSenha = resetSenha;
+window.openAddServico = openAddServico;
+window.editServico = editServico;
+window.deleteServico = deleteServico;
+window.saveServico = saveServico;
+window.showFatTab = showFatTab;
+window.exportRelatorioPDF = exportRelatorioPDF;
+window.exportRelatorioExcel = exportRelatorioExcel;
+window.confirmNewPwd = confirmNewPwd;
+
 </script>
 
 <!-- CLIENTES DATA -->
