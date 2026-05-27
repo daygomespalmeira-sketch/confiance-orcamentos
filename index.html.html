@@ -80,7 +80,6 @@ window._saveServicos = async function(sv){ const b=writeBatch(db); sv.forEach(s=
     startListeners();
     await new Promise(r=>setTimeout(r,1200));
     window._DB.ready = true;
-    window._diagLog && window._diagLog('Firebase PRONTO! users='+window._DB.users.length+' orcs='+window._DB.orcamentos.length, 'ok');
     if(overlay.parentNode) overlay.parentNode.removeChild(overlay);
     loginChildren.forEach(el=>el.style.display='');
   } catch(e) {
@@ -235,40 +234,6 @@ tr:hover td{background:#F8FAFC}
 </style>
 </head>
 <body>
-
-<style id="diag-style">
-#diagPanel {
-  position:fixed; top:0; left:0; right:0; z-index:99999;
-  background:#1F2C4E; color:#64C3D1; font-family:monospace; font-size:11px;
-  padding:6px 12px; max-height:120px; overflow-y:auto;
-  border-bottom:2px solid #FFA300;
-}
-#diagPanel .ok  { color:#4ade80; }
-#diagPanel .err { color:#f87171; }
-#diagPanel .warn { color:#FFA300; }
-</style>
-
-<div id="diagPanel">
-  <span style="color:#FFA300;font-weight:bold">🔍 DIAGNÓSTICO: </span>
-  <span id="diagMsg">Aguardando...</span>
-</div>
-
-<script>
-function diagLog(msg, type) {
-  var p = document.getElementById('diagPanel');
-  var m = document.getElementById('diagMsg');
-  if(!p) return;
-  var span = document.createElement('span');
-  span.className = type||'';
-  span.textContent = ' | ' + msg;
-  p.appendChild(span);
-  p.scrollTop = p.scrollHeight;
-}
-window._diagLog = diagLog;
-diagLog('JS carregado', 'ok');
-diagLog('_DB=' + (window._DB ? 'OK' : 'AUSENTE'), window._DB ? 'ok' : 'err');
-</script>
-
 
 <!-- LOGIN PAGE -->
 <div id="loginPage">
@@ -706,9 +671,6 @@ let currentViewOrcId = null;
 // LOGIN
 // ============================================================
 function doLogin() {
-  window._diagLog && window._diagLog('doLogin chamado', 'ok');
-  window._diagLog && window._diagLog('_DB.ready=' + window._DB?.ready, window._DB?.ready ? 'ok' : 'warn');
-  window._diagLog && window._diagLog('users=' + (window._DB?.users?.length||0), 'ok');
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   const users = getUsers();
@@ -821,24 +783,20 @@ function renderOrcamentos() {
 
 function buildOrcTable(orcs, showActions) {
   if(!orcs.length) return '<p style="color:var(--text-muted);padding:16px">Nenhum orçamento encontrado.</p>';
-  let html = `<table><thead><tr><th>Nº</th><th>Cliente</th><th>Filial</th><th>Data</th><th>Total</th><th>Status</th><th>Responsável</th>${showActions?'<th>Ações</th>':''}</tr></thead><tbody>`;
-  orcs.forEach(o => {
-    const can = canEditOrc(o);
-    const canDel = canDeleteOrc(o);
-    html += `<tr>
-      <td><strong>${o.numero}</strong></td>
-      <td>${o.cliente||'—'}</td>
-      <td>${FILIAIS[o.filial]?.nome||o.filial}</td>
-      <td>${fmtDate(o.createdAt)}</td>
-      <td><strong>${fmtMoney(o.total)}</strong></td>
-      <td>${badgeStatus(o.status)}</td>
-      <td>${o.autorNome||'—'}</td>
-      ${showActions?`<td style="white-space:nowrap">
-        <button class="btn btn-sm btn-secondary" onclick="viewOrcamento('${o.id}')">👁 Ver</button>
-        ${can?`<button class="btn btn-sm btn-secondary" onclick="editOrcamento('${o.id}')">✏️</button>`:''}
-        ${o.status==='aprovado'||o.status==='enviado'?`<button class="btn btn-sm btn-success" onclick="markEnviado('${o.id}')">📤</button>`:''}
-        ${canDel?`<button class="btn btn-sm btn-danger" onclick="deleteOrcamento('${o.id}')">🗑</button>`:''}
-      </td>`:''}</tr>`;
+  let html = '<table><thead><tr><th>Nº</th><th>Cliente</th><th>Filial</th><th>Data</th><th>Total</th><th>Status</th><th>Responsável</th>'+(showActions?'<th>Ações</th>':'')+'</tr></thead><tbody>';
+  orcs.forEach(function(o) {
+    var can = canEditOrc(o);
+    var canDel = canDeleteOrc(o);
+    var acoes = '';
+    if(showActions) {
+      acoes = '<td style="white-space:nowrap">';
+      acoes += '<button class="btn btn-sm btn-secondary" data-action="ver" data-id="'+o.id+'">👁 Ver</button> ';
+      if(can) acoes += '<button class="btn btn-sm btn-secondary" data-action="editar" data-id="'+o.id+'">✏️</button> ';
+      if(o.status==='aprovado'||o.status==='enviado') acoes += '<button class="btn btn-sm btn-success" data-action="enviado" data-id="'+o.id+'">📤</button> ';
+      if(canDel) acoes += '<button class="btn btn-sm btn-danger" data-action="excluir" data-id="'+o.id+'">🗑</button>';
+      acoes += '</td>';
+    }
+    html += '<tr><td><strong>'+o.numero+'</strong></td><td>'+(o.cliente||'—')+'</td><td>'+(FILIAIS[o.filial]?.nome||o.filial)+'</td><td>'+fmtDate(o.createdAt)+'</td><td><strong>'+fmtMoney(o.total)+'</strong></td><td>'+badgeStatus(o.status)+'</td><td>'+(o.autorNome||'—')+'</td>'+acoes+'</tr>';
   });
   html += '</tbody></table>';
   return html;
@@ -1155,21 +1113,17 @@ function viewOrcamento(id) {
 }
 
 function renderAprovacoes() {
-  const orcs = getOrcamentos().filter(o=>o.status==='aguardando');
-  const el = document.getElementById('aprovacoesTable');
-  if(!orcs.length) { el.innerHTML = '<div class="alert alert-info">Nenhum orçamento aguardando aprovação.</div>'; return; }
-  let html = `<table><thead><tr><th>Nº</th><th>Cliente</th><th>Responsável</th><th>Total</th><th>Data</th><th>Ações</th></tr></thead><tbody>`;
-  orcs.forEach(o=>{
-    html+=`<tr>
-      <td>${o.numero}</td><td>${escHtml(o.cliente||'—')}</td><td>${o.autorNome||'—'}</td>
-      <td><strong>${fmtMoney(o.total)}</strong></td><td>${fmtDate(o.createdAt)}</td>
-      <td>
-        <button class="btn btn-sm btn-secondary" onclick="viewOrcamento('${o.id}')">👁 Ver</button>
-        <button class="btn btn-sm btn-primary" onclick="openAprovar('${o.id}')">Aprovar/Reprovar</button>
-      </td>
-    </tr>`;
+  var orcs = (window._DB?.orcamentos||[]).filter(function(o){return o.status==='aguardando';});
+  var el = document.getElementById('aprovacoesTable');
+  if(!orcs.length){ el.innerHTML='<div class="alert alert-info">Nenhum orçamento aguardando aprovação.</div>'; return; }
+  var html='<table><thead><tr><th>Nº</th><th>Cliente</th><th>Responsável</th><th>Total</th><th>Data</th><th>Ações</th></tr></thead><tbody>';
+  orcs.forEach(function(o){
+    html+='<tr><td>'+o.numero+'</td><td>'+(o.cliente||'—')+'</td><td>'+(o.autorNome||'—')+'</td><td><strong>'+fmtMoney(o.total)+'</strong></td><td>'+fmtDate(o.createdAt)+'</td><td>'+
+      '<button class="btn btn-sm btn-secondary" data-action="ver" data-id="'+o.id+'">👁 Ver</button> '+
+      '<button class="btn btn-sm btn-primary" data-action="aprovar" data-id="'+o.id+'">Aprovar/Reprovar</button>'+
+      '</td></tr>';
   });
-  el.innerHTML = html+'</tbody></table>';
+  el.innerHTML=html+'</tbody></table>';
 }
 
 function openAprovar(id) {
@@ -1551,6 +1505,20 @@ function valorPorExtenso(valor) {
   const centExt = cents>0 ? ' e ' + numExtenso(cents) + (cents===1?' centavo':' centavos') : '';
   return (ext + (inteiro===1?' real':' reais') + centExt).charAt(0).toUpperCase() + (ext + (inteiro===1?' real':' reais') + centExt).slice(1);
 }
+
+// ── Event delegation global — substitui todos os onclick dinâmicos ──
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  var action = btn.getAttribute('data-action');
+  var id = btn.getAttribute('data-id');
+  if(action==='ver')      { viewOrcamento(id); }
+  else if(action==='editar')  { editOrcamento(id); }
+  else if(action==='excluir') { deleteOrcamento(id); }
+  else if(action==='enviado') { markEnviado(id); }
+  else if(action==='aprovar') { openAprovar(id); }
+});
+
 function numExtenso(n) {
   if(n===0) return 'zero';
   const un=['','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
