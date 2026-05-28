@@ -84,7 +84,7 @@ window._saveServicos = async function(sv){ const b=writeBatch(db); sv.forEach(s=
     loginChildren.forEach(el=>el.style.display='');
   } catch(e) {
     console.error('Firebase init error:',e);
-    overlay.innerHTML = '<div style="font-size:2rem">⚠️</div><div style="font-family:Montserrat,sans-serif;color:#c0392b;font-weight:600;text-align:center">Erro ao conectar.<br>Verifique sua internet.</div><button onclick="location.reload()" style="margin-top:12px;padding:8px 24px;background:#1F2C4E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:Montserrat,sans-serif">Tentar novamente</button>';
+    overlay.innerHTML = '<div style="font-size:2rem">⚠️</div><div style="font-family:Montserrat,sans-serif;color:#c0392b;font-weight:600;text-align:center">Erro ao conectar.<br>Verifique sua internet.</div><button data-action="reload" style="margin-top:12px;padding:8px 24px;background:#1F2C4E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:Montserrat,sans-serif">Tentar novamente</button>';
   }
 })();
 </script>
@@ -252,7 +252,7 @@ tr:hover td{background:#F8FAFC}
       <input type="password" id="loginPass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()" />
     </div>
     <div class="login-error" id="loginError">E-mail ou senha incorretos.</div>
-    <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="doLogin()">Entrar</button>
+    <button class="btn btn-primary btn-full" style="margin-top:8px" data-action="login">Entrar</button>
   </div>
 </div>
 
@@ -270,7 +270,7 @@ tr:hover td{background:#F8FAFC}
       <input type="password" id="newPwd2" placeholder="Repita a senha" onkeydown="if(event.key==='Enter')confirmNewPwd()" />
     </div>
     <div class="login-error" id="changePwdError" style="display:none;margin-bottom:8px"></div>
-    <button class="btn btn-primary btn-full" onclick="confirmNewPwd()">Salvar e Entrar</button>
+    <button class="btn btn-primary btn-full" data-action="confirmNewPwd">Salvar e Entrar</button>
   </div>
 </div>
 
@@ -293,16 +293,16 @@ tr:hover td{background:#F8FAFC}
         <span id="onlineDot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;transition:background .3s"></span>
         <span id="onlineText" style="color:#fff">Online</span>
       </span>
-      <button class="btn-logout" onclick="doLogout()">Sair</button>
+      <button class="btn-logout" data-action="logout">Sair</button>
     </div>
   </header>
   <nav class="app-nav" id="appNav">
-    <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard',this)">🏠 Dashboard</div>
-    <div class="nav-item" data-section="orcamentos" onclick="showSection('orcamentos',this)">📋 Orçamentos</div>
-    <div class="nav-item d-none" data-section="aprovacoes" id="navAprovacoes" onclick="showSection('aprovacoes',this)">✅ Aprovações</div>
+    <div class="nav-item active" data-section="dashboard" data-action="nav">🏠 Dashboard</div>
+    <div class="nav-item" data-section="orcamentos" data-action="nav">📋 Orçamentos</div>
+    <div class="nav-item d-none" data-section="aprovacoes" id="navAprovacoes" data-action="nav">✅ Aprovações</div>
     
-    <div class="nav-item d-none" data-section="colaboradores" id="navColaboradores" onclick="showSection('colaboradores',this)">👥 Colaboradores</div>
-    <div class="nav-item d-none" data-section="servicos" id="navServicos" onclick="showSection('servicos',this)">🔧 Serviços</div>
+    <div class="nav-item d-none" data-section="colaboradores" id="navColaboradores" data-action="nav">👥 Colaboradores</div>
+    <div class="nav-item d-none" data-section="servicos" id="navServicos" data-action="nav">🔧 Serviços</div>
   </nav>
   <main class="app-content">
 
@@ -319,7 +319,7 @@ tr:hover td{background:#F8FAFC}
     <div class="section" id="sec-orcamentos">
       <div class="card-header" style="margin-bottom:16px">
         <span class="card-title" style="font-size:1.3rem">Orçamentos</span>
-        <button class="btn btn-primary" onclick="openNewOrcamento()">+ Novo Orçamento</button>
+        <button class="btn btn-primary" data-action="newOrcamento">+ Novo Orçamento</button>
       </div>
       <div class="card">
         <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
@@ -352,16 +352,16 @@ tr:hover td{background:#F8FAFC}
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
         <div class="card-title" style="font-size:1.3rem;margin:0">💰 Aprovados</div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-secondary btn-sm" onclick="exportRelatorioPDF()">📄 Exportar PDF</button>
-          <button class="btn btn-secondary btn-sm" onclick="exportRelatorioExcel()">📊 Exportar Excel</button>
+          <button class="btn btn-secondary btn-sm" data-action="exportRelatorioPDF">📄 Exportar PDF</button>
+          <button class="btn btn-secondary btn-sm" data-action="exportRelatorioExcel">📊 Exportar Excel</button>
         </div>
       </div>
       <div class="card">
         <div class="tab-nav">
-          <button class="tab-btn active" onclick="showFatTab('mensal',this)">Mensal</button>
-          <button class="tab-btn" onclick="showFatTab('trimestral',this)">Trimestral</button>
-          <button class="tab-btn" onclick="showFatTab('semestral',this)">Semestral</button>
-          <button class="tab-btn" onclick="showFatTab('anual',this)">Anual</button>
+          <button class="tab-btn active" data-action="fatTab" data-tab="mensal">Mensal</button>
+          <button class="tab-btn" data-action="fatTab" data-tab="trimestral">Trimestral</button>
+          <button class="tab-btn" data-action="fatTab" data-tab="semestral">Semestral</button>
+          <button class="tab-btn" data-action="fatTab" data-tab="anual">Anual</button>
         </div>
         <div id="fatContent"></div>
       </div>
@@ -371,7 +371,7 @@ tr:hover td{background:#F8FAFC}
     <div class="section" id="sec-colaboradores">
       <div class="card-header" style="margin-bottom:16px">
         <span class="card-title" style="font-size:1.3rem">Colaboradores</span>
-        <button class="btn btn-primary" onclick="openAddColab()">+ Adicionar</button>
+        <button class="btn btn-primary" data-action="openAddColab">+ Adicionar</button>
       </div>
       <div class="card">
         <div class="table-wrap" id="colaboradoresTable"></div>
@@ -382,7 +382,7 @@ tr:hover td{background:#F8FAFC}
     <div class="section" id="sec-servicos">
       <div class="card-header" style="margin-bottom:16px">
         <span class="card-title" style="font-size:1.3rem">Serviços Pré-Cadastrados</span>
-        <button class="btn btn-primary" onclick="openAddServico()">+ Adicionar Serviço</button>
+        <button class="btn btn-primary" data-action="openAddServico">+ Adicionar Serviço</button>
       </div>
       <div class="card">
         <div class="table-wrap" id="servicosTable"></div>
@@ -511,8 +511,8 @@ tr:hover td{background:#F8FAFC}
         <tbody id="itemsBody"></tbody>
       </table>
       <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-secondary btn-sm" onclick="addItemFromService()">+ Serviço Pré-Cadastrado</button>
-        <button class="btn btn-secondary btn-sm" onclick="addItemLivre()">+ Item Livre</button>
+        <button class="btn btn-secondary btn-sm" data-action="addItemFromService">+ Serviço Pré-Cadastrado</button>
+        <button class="btn btn-secondary btn-sm" data-action="addItemLivre">+ Item Livre</button>
       </div>
     </div>
 
@@ -579,9 +579,9 @@ tr:hover td{background:#F8FAFC}
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modalOrcamento')">Cancelar</button>
-      <button class="btn btn-secondary" onclick="saveOrcamento('rascunho')">Salvar Rascunho</button>
-      <button class="btn btn-primary" onclick="saveOrcamento('aguardando')">Enviar para Aprovação</button>
+      <button class="btn btn-secondary" data-action="closeModal" data-modal="modalOrcamento">Cancelar</button>
+      <button class="btn btn-secondary" data-action="saveOrcRascunho">Salvar Rascunho</button>
+      <button class="btn btn-primary" data-action="saveOrcAguardando">Enviar para Aprovação</button>
     </div>
   </div>
 </div>
@@ -591,9 +591,9 @@ tr:hover td{background:#F8FAFC}
   <div class="modal modal-xl">
     <div id="viewOrcContent"></div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modalViewOrc')">Fechar</button>
-      <button class="btn btn-secondary" id="btnWpp" onclick="sendWhatsApp()">📱 WhatsApp</button>
-      <button class="btn btn-primary" id="btnPdf" onclick="exportPDF()">📄 Exportar PDF</button>
+      <button class="btn btn-secondary" data-action="closeModal" data-modal="modalViewOrc">Fechar</button>
+      <button class="btn btn-secondary" id="btnWpp" data-action="sendWhatsApp">📱 WhatsApp</button>
+      <button class="btn btn-primary" id="btnPdf" data-action="exportPDF">📄 Exportar PDF</button>
     </div>
   </div>
 </div>
@@ -608,9 +608,9 @@ tr:hover td{background:#F8FAFC}
       <textarea id="aprovObs" rows="3" placeholder="Observação (opcional para aprovação, obrigatória para reprovação)..."></textarea>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modalAprovar')">Cancelar</button>
-      <button class="btn btn-danger" onclick="resolveAprovacao('reprovado')">Reprovar</button>
-      <button class="btn btn-success" onclick="resolveAprovacao('aprovado')">Aprovar</button>
+      <button class="btn btn-secondary" data-action="closeModal" data-modal="modalAprovar">Cancelar</button>
+      <button class="btn btn-danger" data-action="reprovar">Reprovar</button>
+      <button class="btn btn-success" data-action="aprovar2">Aprovar</button>
     </div>
   </div>
 </div>
@@ -637,8 +637,8 @@ tr:hover td{background:#F8FAFC}
     </div>
     <div class="alert alert-info" style="font-size:.82rem;margin-top:8px">A senha inicial será <strong>123</strong>. O colaborador deverá criar uma nova senha no primeiro acesso.</div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modalColab')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveColab()">Salvar</button>
+      <button class="btn btn-secondary" data-action="closeModal" data-modal="modalColab">Cancelar</button>
+      <button class="btn btn-primary" data-action="saveColab">Salvar</button>
     </div>
   </div>
 </div>
@@ -657,8 +657,8 @@ tr:hover td{background:#F8FAFC}
       <input type="number" id="servicoValor" value="0" min="0" step="0.01" />
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal('modalServico')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveServico()">Salvar</button>
+      <button class="btn btn-secondary" data-action="closeModal" data-modal="modalServico">Cancelar</button>
+      <button class="btn btn-primary" data-action="saveServico">Salvar</button>
     </div>
   </div>
 </div>
@@ -1047,7 +1047,7 @@ function renderItemsTable() {
       <td><input type="number" value="${item.qtd||1}" min="1" step="0.5" onchange="itemsRows[${i}].qtd=parseFloat(this.value)||1;calcTotals()" /></td>
       <td><input type="number" value="${item.valor||0}" min="0" step="0.01" onchange="itemsRows[${i}].valor=parseFloat(this.value)||0;calcTotals()" /></td>
       <td><strong id="sub_${i}">${fmtMoney((parseFloat(item.qtd||1))*(parseFloat(item.valor||0)))}</strong></td>
-      <td><button class="btn btn-sm btn-danger" onclick="removeItem(${i})">✕</button></td>
+      <td><button class="btn btn-sm btn-danger" data-action="removeItem" data-idx="${i}">✕</button></td>
     `;
     body.appendChild(tr);
   });
@@ -1103,7 +1103,7 @@ function _doAutocomplete() {
   if(q.length < 2) { list.classList.add('d-none'); return; }
   const matches = CLIENTES_DATA.filter(c=>c.n.toLowerCase().includes(q)).slice(0,30);
   if(!matches.length) { list.classList.add('d-none'); return; }
-  list.innerHTML = matches.map((c,i)=>`<div class="autocomplete-item" onclick="selectCliente(${i},event)"><strong>${escHtml(c.n)}</strong><br><small style="color:var(--text-muted)">${c.c} | ${c.ci}/${c.uf}</small></div>`).join('');
+  list.innerHTML = matches.map((c,i)=>`<div class="autocomplete-item" data-action="selectCliente" data-idx="${i}"><strong>${escHtml(c.n)}</strong><br><small style="color:var(--text-muted)">${c.c} | ${c.ci}/${c.uf}</small></div>`).join('');
   list._matches = matches;
   list.classList.remove('d-none');
 }
@@ -1250,8 +1250,8 @@ function renderColaboradores() {
       <td>${u.ativo!==false?'<span class="badge badge-aprovado">Ativo</span>':'<span class="badge badge-reprovado">Inativo</span>'}</td>
       <td>${u.primeiroAcesso?'<span class="badge badge-aguardando">Pendente</span>':'<span class="badge badge-aprovado">Ok</span>'}</td>
       <td>
-        <button class="btn btn-sm btn-secondary" onclick="toggleColab('${u.id}')">${u.ativo!==false?'Desativar':'Ativar'}</button>
-        <button class="btn btn-sm btn-danger" onclick="resetSenha('${u.id}')">Reset Senha</button>
+        <button class="btn btn-sm btn-secondary" data-action="toggleColab" data-id="${u.id}">${u.ativo!==false?'Desativar':'Ativar'}</button>
+        <button class="btn btn-sm btn-danger" data-action="resetSenha" data-id="${u.id}">Reset Senha</button>
       </td>
     </tr>`;
   });
@@ -1297,8 +1297,8 @@ function renderServicos() {
   let html = `<table><thead><tr><th>Descrição</th><th>Valor Padrão</th><th>Ações</th></tr></thead><tbody>`;
   servs.forEach(s=>{
     html+=`<tr><td>${escHtml(s.desc)}</td><td>${fmtMoney(s.valor)}</td><td>
-      <button class="btn btn-sm btn-secondary" onclick="editServico('${s.id}')">✏️ Editar</button>
-      <button class="btn btn-sm btn-danger" onclick="deleteServico('${s.id}')">🗑</button>
+      <button class="btn btn-sm btn-secondary" data-action="editServico" data-id="${s.id}">✏️ Editar</button>
+      <button class="btn btn-sm btn-danger" data-action="deleteServico" data-id="${s.id}">🗑</button>
     </td></tr>`;
   });
   document.getElementById('servicosTable').innerHTML = html+'</tbody></table>';
@@ -1591,11 +1591,67 @@ document.addEventListener('click', function(e) {
   if(!btn) return;
   var action = btn.getAttribute('data-action');
   var id = btn.getAttribute('data-id');
-  if(action==='ver')      { viewOrcamento(id); }
-  else if(action==='editar')  { editOrcamento(id); }
-  else if(action==='excluir') { deleteOrcamento(id); }
-  else if(action==='enviado') { markEnviado(id); }
-  else if(action==='aprovar') { openAprovar(id); }
+  var modal = btn.getAttribute('data-modal');
+  var tab = btn.getAttribute('data-tab');
+  var idx = btn.getAttribute('data-idx');
+  var section = btn.getAttribute('data-section');
+
+  // Orçamentos - tabela
+  if(action==='ver')            { viewOrcamento(id); }
+  else if(action==='editar')    { editOrcamento(id); }
+  else if(action==='excluir')   { deleteOrcamento(id); }
+  else if(action==='enviado')   { markEnviado(id); }
+  else if(action==='aprovar')   { openAprovar(id); }
+
+  // Navegação
+  else if(action==='nav')       { showSection(section, btn); }
+  else if(action==='logout')    { doLogout(); }
+
+  // Login
+  else if(action==='login')     { doLogin(); }
+  else if(action==='confirmNewPwd') { confirmNewPwd(); }
+
+  // Novo orçamento
+  else if(action==='newOrcamento')  { openNewOrcamento(); }
+
+  // Dashboard
+  else if(action==='exportRelatorioPDF')   { exportRelatorioPDF(); }
+  else if(action==='exportRelatorioExcel') { exportRelatorioExcel(); }
+  else if(action==='fatTab')    { showFatTab(tab, btn); }
+
+  // Colaboradores e Serviços
+  else if(action==='openAddColab')    { openAddColab(); }
+  else if(action==='openAddServico')  { openAddServico(); }
+  else if(action==='saveColab')       { saveColab(); }
+  else if(action==='saveServico')     { saveServico(); }
+  else if(action==='toggleColab')     { toggleColab(id); }
+  else if(action==='resetSenha')      { resetSenha(id); }
+  else if(action==='editServico')     { editServico(id); }
+  else if(action==='deleteServico')   { deleteServico(id); }
+
+  // Modal orçamento
+  else if(action==='addItemFromService') { addItemFromService(); }
+  else if(action==='addItemLivre')       { addItemLivre(); }
+  else if(action==='saveOrcRascunho')    { saveOrcamento('rascunho'); }
+  else if(action==='saveOrcAguardando')  { saveOrcamento('aguardando'); }
+  else if(action==='removeItem')         { removeItem(parseInt(idx)); }
+
+  // Modal view
+  else if(action==='sendWhatsApp') { sendWhatsApp(); }
+  else if(action==='exportPDF')    { exportPDF(); }
+
+  // Modal aprovar
+  else if(action==='reprovar')  { resolveAprovacao('reprovado'); }
+  else if(action==='aprovar2')  { resolveAprovacao('aprovado'); }
+
+  // Fechar modais
+  else if(action==='closeModal') { closeModal(modal); }
+
+  // Autocomplete cliente
+  else if(action==='selectCliente') { selectCliente(parseInt(idx), e); }
+
+  // Reload (erro de conexão)
+  else if(action==='reload') { location.reload(); }
 });
 
 function numExtenso(n) {
